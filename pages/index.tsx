@@ -1,7 +1,11 @@
 import type { NextPage } from "next";
 import axios from "axios";
 import { useQuery } from "react-query";
-import styles from "../styles/Home.module.css";
+import SearchIcon from "../public/icon-search.svg";
+import LoadingIcon from "../public/icon-loading.gif";
+import Image from "next/image";
+import { useState } from "react";
+import styles from "../styles/skeleton.module.css";
 
 interface Beer {
   id: number;
@@ -9,42 +13,75 @@ interface Beer {
   tagline: string;
   description: string;
   abv: number;
+  first_brewed: string;
 }
 
 const Home: NextPage = () => {
-  const { data, isLoading, isError } = useQuery<Beer[]>("beers", fetchBeers);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const [searchTerm, setSearchTerm] = useState("");
+  const { data, isLoading, isError, isFetching } = useQuery<Beer[]>(
+    ["beers", searchTerm],
+    () => fetchBeers(searchTerm)
+  );
 
   if (isError) {
-    return <div>Error occurred while fetching data</div>;
+    return <div>Nous n'avons pas réussi à charger la liste de bière.</div>;
   }
 
   return (
-    <div className={styles.container}>
-      <h1 className="text-red-600">Coucou les amis</h1>
-
-      <div>
-        <h2>Beers:</h2>
-        <ul>
-          {data?.map((beer) => (
-            <li key={beer.id}>
-              <h3>{beer.name}</h3>
-              <p>{beer.tagline}</p>
-              <p>{beer.description}</p>
-              <p>ABV: {beer.abv}%</p>
-            </li>
-          ))}
+    <div className="w-screen flex justify-center items-center bg-gray-50">
+      <div className="w-106 bg-white p-4 space-y-2">
+        <div className="flex space-x-2 px-2 py-1 rounded-md border border-gray-500 focus-within:border-gray-700 focus-within:shadow-lg">
+          <Image
+            className="text-green-900"
+            src={isLoading ? LoadingIcon : SearchIcon}
+            width={20}
+            height={20}
+            alt="Picture of the author"
+          />
+          <input
+            className="w-full focus:outline-none"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <ul className="space-y-2">
+          {isLoading || isFetching ? (
+            <>
+              <li className={styles["skeleton-li"]} />
+              <li className={styles["skeleton-li"]} />
+              <li className={styles["skeleton-li"]} />
+              <li className={styles["skeleton-li"]} />
+              <li className={styles["skeleton-li"]} />
+            </>
+          ) : (
+            data?.map((beer) => (
+              <li
+                className="flex justify-between items-center cursor-pointer rounded-md hover:bg-gray-100 px-2 py-1"
+                key={beer.id}
+              >
+                <div className="text-gray-900 font-semibold">{beer.name}</div>
+                <div className="text-gray-700">{beer.first_brewed}</div>
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </div>
   );
 };
 
-const fetchBeers = async (): Promise<Beer[]> => {
-  const response = await axios.get("https://api.punkapi.com/v2/beers");
+const fetchBeers = async (searchTerm: string): Promise<Beer[]> => {
+  const searchTermParam = searchTerm
+    ? {
+        beer_name: searchTerm,
+      }
+    : {};
+  const response = await axios.get("https://api.punkapi.com/v2/beers", {
+    params: {
+      per_page: 10,
+      ...searchTermParam,
+    },
+  });
   return response.data;
 };
 
