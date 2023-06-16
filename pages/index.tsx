@@ -6,13 +6,13 @@ import LoadingIcon from "../public/icon-loading.gif";
 import Image from "next/image";
 import { useState } from "react";
 import styles from "../styles/skeleton.module.css";
+import RandomlyGeneratedBeerCard from "../components/RandomlyGeneratedBeerCard";
 
-interface Beer {
+export interface Beer {
   id: number;
   name: string;
-  tagline: string;
+  image_url: string;
   description: string;
-  abv: number;
   first_brewed: string;
 }
 
@@ -28,7 +28,11 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className="w-screen flex justify-center items-center bg-gray-50">
+    <div className="w-screen flex flex-col justify-center items-center bg-gray-50">
+      <div className="flex space-x-4">
+        <RandomlyGeneratedBeerCard key={1} id={1} />
+        <RandomlyGeneratedBeerCard key={2} id={2} />
+      </div>
       <div className="w-106 bg-white p-4 space-y-2">
         <div className="flex space-x-2 px-2 py-1 rounded-md border border-gray-500 focus-within:border-gray-700 focus-within:shadow-lg">
           <Image
