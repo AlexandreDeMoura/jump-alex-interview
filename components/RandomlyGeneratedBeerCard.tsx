@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import React from "react";
 import { useQuery } from "react-query";
 import { Beer } from "../pages/index";
@@ -32,7 +33,15 @@ const RandomlygeneratedBeerCard = ({ id }: RandomlygeneratedBeerCardProps) => {
           </div>
         </div>
       ) : null}
-      <div className="font-semibold text-green-900">Voir détail</div>
+      <Link
+        href={{
+          pathname: "/beer-detail",
+          query: { beer: JSON.stringify(beer) },
+        }}
+        as="/beer-detail"
+      >
+        <div className="font-semibold text-green-900">Voir détail</div>
+      </Link>
     </div>
   );
 };
