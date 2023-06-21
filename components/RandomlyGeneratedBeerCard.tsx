@@ -3,22 +3,23 @@ import Link from "next/link";
 import React from "react";
 import { useQuery } from "react-query";
 import { Beer } from "../pages/index";
+import Image from "next/image";
 
 type RandomlygeneratedBeerCardProps = {
   id: number;
 };
 
 const RandomlygeneratedBeerCard = ({ id }: RandomlygeneratedBeerCardProps) => {
-  const { data, isLoading, isError, isFetching } = useQuery<Beer[]>(
+  const { data, isLoading } = useQuery<Beer[]>(
     ["beers", id],
     fetchRandomBeers,
     {
-      refetchInterval: 10000, // Refetch every 10 seconds (10000 milliseconds)
+      refetchInterval: 10000,
     }
   );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Chargement...</div>;
   }
 
   const beer = data ? data[0] : null;
@@ -26,7 +27,15 @@ const RandomlygeneratedBeerCard = ({ id }: RandomlygeneratedBeerCardProps) => {
     <div className="flex flex-col justify-between w-56 h-56 p-6 border border-gray-600 rounded-md cursor-pointer hover:bg-gray-100">
       {beer ? (
         <div className="flex space-x-4">
-          {beer.image_url && <img className="w-8" src={beer.image_url} />}
+          {beer.image_url && (
+            <Image
+              width={32}
+              height={32}
+              loader={() => beer.image_url}
+              src={beer.image_url}
+              alt="beer image"
+            />
+          )}
           <div>
             <div className="text-gray-900 font-semibold">{beer.name}</div>
             <div className="text-gray-700">{beer.first_brewed}</div>
