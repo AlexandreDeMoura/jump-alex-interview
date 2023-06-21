@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import React from "react";
-import Image from "next/image";
 import { Beer } from ".";
 import Link from "next/link";
+import Image from "next/image";
 
 const BeerDetail = () => {
   const router = useRouter();
@@ -17,11 +17,15 @@ const BeerDetail = () => {
         </Link>
         <div className="flex space-x-6">
           <div>
-            <img
-              src={parsedbeer?.image_url || ""}
-              className="w-12"
-              alt="image de bière"
-            />
+            {parsedbeer?.image_url && (
+              <Image
+                width={32}
+                height={32}
+                loader={() => parsedbeer.image_url}
+                src={parsedbeer.image_url}
+                alt="beer image"
+              />
+            )}
           </div>
           <div>
             <div className="text-gray-900 font-semibold">
