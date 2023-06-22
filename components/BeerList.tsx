@@ -20,7 +20,7 @@ const BeerList: React.FC<BeerListProps> = ({ data, isLoading, isFetching }) => {
           <li className={styles["skeleton-li"]} />
           <li className={styles["skeleton-li"]} />
         </>
-      ) : (
+      ) : data && data.length > 0 ? (
         data?.map((beer) => (
           <Link
             href={{
@@ -30,12 +30,16 @@ const BeerList: React.FC<BeerListProps> = ({ data, isLoading, isFetching }) => {
             as={`/beer-detail/${beer.id}`}
             key={beer.id}
           >
-            <li className="flex justify-between items-center cursor-pointer rounded-md hover:bg-gray-100 px-2 py-1">
-              <div className="text-gray-900 font-semibold">{beer.name}</div>
+            <li className="flex justify-between items-center cursor-pointer rounded-md hover:bg-gray-100 px-2 py-1 w-full">
+              <div className="text-gray-900 font-semibold w-60 lg:w-auto truncate">
+                {beer.name}
+              </div>
               <div className="text-gray-700">{beer.first_brewed}</div>
             </li>
           </Link>
         ))
+      ) : (
+        <div>Aucunes bières ne correspond à votre recherche.</div>
       )}
     </ul>
   );
