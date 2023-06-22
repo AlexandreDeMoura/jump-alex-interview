@@ -26,13 +26,13 @@ const Home = () => {
   }
 
   return (
-    <div className="w-screen flex flex-col justify-center items-center p-10 space-y-5">
-      <div className="flex space-x-4">
+    <div className="w-screen flex flex-col justify-center items-center p-5 lg:p-10 space-y-5">
+      <div className="w-full lg:w-auto flex space-x-4 overflow-scroll">
         <RandomlyGeneratedBeerCard key={1} id={1} />
         <RandomlyGeneratedBeerCard key={2} id={2} />
       </div>
-      <div className="w-136 bg-white p-4 space-y-2">
-        <div className="flex space-x-2 px-2 py-1 rounded-md border border-gray-500 focus-within:border-gray-700 focus-within:shadow-lg">
+      <div className="w-screen lg:w-136 bg-white p-4 lg:p-4 space-y-2">
+        <div className="w-full flex space-x-2 px-2 py-1 rounded-md border border-gray-500 focus-within:border-gray-700 focus-within:shadow-lg">
           <Image
             className="text-green-900"
             src={isLoading ? "/icon-loading.gif" : "/icon-search.svg"}
