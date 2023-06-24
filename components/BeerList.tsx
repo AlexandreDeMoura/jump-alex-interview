@@ -1,6 +1,7 @@
 import React from "react";
 import { Beer } from "../pages/index";
 import styles from "../styles/skeleton.module.css";
+import { useLocalStorage } from "react-use";
 import Link from "next/link";
 
 interface BeerListProps {
@@ -10,6 +11,7 @@ interface BeerListProps {
 }
 
 const BeerList: React.FC<BeerListProps> = ({ data, isLoading, isFetching }) => {
+  const [, setBeerDetail] = useLocalStorage<Beer>("beer-detail");
   return (
     <ul className="space-y-2">
       {isLoading || isFetching ? (
@@ -24,10 +26,10 @@ const BeerList: React.FC<BeerListProps> = ({ data, isLoading, isFetching }) => {
         data?.map((beer) => (
           <Link
             href={{
-              pathname: "/beer-detail",
-              query: { beer: JSON.stringify(beer) },
+              pathname: "/beer-detail/[id]",
+              query: { id: beer.id },
             }}
-            as={`/beer-detail/${beer.id}`}
+            onClick={() => setBeerDetail(beer)}
             key={beer.id}
           >
             <li className="flex justify-between items-center cursor-pointer rounded-md hover:bg-gray-100 px-2 py-1 w-full">

@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 import { useQuery } from "react-query";
 import { Beer } from "../pages/index";
+import { useLocalStorage } from "react-use";
 import Image from "next/image";
 
 type RandomlygeneratedBeerCardProps = {
@@ -10,6 +11,7 @@ type RandomlygeneratedBeerCardProps = {
 };
 
 const RandomlygeneratedBeerCard = ({ id }: RandomlygeneratedBeerCardProps) => {
+  const [, setBeerDetail] = useLocalStorage<Beer>("beer-detail");
   const { data, isLoading } = useQuery<Beer[]>(
     ["beers", id],
     fetchRandomBeers,
@@ -44,10 +46,11 @@ const RandomlygeneratedBeerCard = ({ id }: RandomlygeneratedBeerCardProps) => {
       ) : null}
       <Link
         href={{
-          pathname: "/beer-detail",
-          query: { beer: JSON.stringify(beer) },
+          pathname: "/beer-detail/[id]",
+          query: { id: beer?.id },
         }}
-        as="/beer-detail"
+        as={`/beer-detail/${beer?.id}`}
+        onClick={beer ? () => setBeerDetail(beer) : () => 0}
       >
         <div className="font-semibold text-green-900">Voir détail</div>
       </Link>
